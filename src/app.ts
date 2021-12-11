@@ -1,11 +1,34 @@
-export class AppController {
-  constructor() {}
+import express, { Application, Request, Response, urlencoded } from "express";
+import "reflect-metadata";
+import { createConnection } from "typeorm";
 
-  hello(test: string) {
-    return console.log(test);
-  }
-}
+//typeorm
+createConnection({
+  type: "postgres",
+  host: "localhost",
+  port: 5432,
+  username: "postgres",
+  password: "postgres",
+  database: "galeria",
+  entities: [__dirname + "/models/*.ts"],
+  synchronize: true,
+})
+  .then((connection) => {
+    // here you can start to work with your entities
+  })
+  .catch((error) => console.log(error));
 
-const test = new AppController;
+//express
+const app: Application = express();
 
-test.hello("Naruto");
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.get("/", async (req: Request, res: Response): Promise<Response> => {
+  return res.status(200).send({
+    message: "Mugiwara",
+  });
+});
+app.listen(4000, () => {
+  console.log("running");
+});
