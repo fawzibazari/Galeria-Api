@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
+const routes_1 = __importDefault(require("./routes/routes"));
 //typeorm
 (0, typeorm_1.createConnection)({
     type: "postgres",
@@ -23,7 +24,7 @@ const typeorm_1 = require("typeorm");
     username: "postgres",
     password: "postgres",
     database: "galeria",
-    entities: [__dirname + "/entity/*.js"],
+    entities: [__dirname + "/models/*.ts"],
     synchronize: true,
 })
     .then((connection) => {
@@ -34,6 +35,9 @@ const typeorm_1 = require("typeorm");
 const app = (0, express_1.default)();
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
+//routes
+app.use(routes_1.default);
+// je dois prendre se get vers le routes.ts plus tard
 app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(200).send({
         message: "Mugiwara",

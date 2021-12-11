@@ -1,6 +1,7 @@
 import express, { Application, Request, Response, urlencoded } from "express";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
+import router from "./routes/routes";
 
 //typeorm
 createConnection({
@@ -24,6 +25,10 @@ const app: Application = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+//routes
+app.use(router);
+
+// je dois prendre se get vers le routes.ts plus tard
 app.get("/", async (req: Request, res: Response): Promise<Response> => {
   return res.status(200).send({
     message: "Mugiwara",
