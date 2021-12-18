@@ -1,8 +1,12 @@
-import { Router } from "express";
-const router = Router();
+import { Router, Request, Response } from "express";
+import auth from "./auth";
+import user from "./user";
 
-import { createUser } from "../services/user";
+const routes = Router();
 
-router.post("/users", createUser);
 
-export default router;
+//routes
+routes.use("/auth", auth);
+routes.use("/user", user);
+
+export default routes;

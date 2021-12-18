@@ -1,7 +1,10 @@
-import express, { Application, Request, Response, urlencoded } from "express";
+import express, { Application, Request, Response, Router, urlencoded } from "express";
 import "reflect-metadata";
 import { createConnection } from "typeorm";
-import router from "./routes/routes";
+import helmet from "helmet";
+import  cors from "cors";
+import routes from "./routes/routes";
+
 
 //typeorm
 createConnection({
@@ -22,11 +25,12 @@ createConnection({
 //express
 const app: Application = express();
 
+app.use(cors());
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//routes
-app.use(router);
+app.use("/", routes);
 
 // je dois prendre se get vers le routes.ts plus tard
 app.get("/", async (req: Request, res: Response): Promise<Response> => {
