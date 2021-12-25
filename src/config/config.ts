@@ -1,4 +1,3 @@
-
 export default {
-    jwtSecret: "Mugiwara"
-  };
+  jwtSecret: 'Mugiwara',
+};

@@ -27,16 +27,15 @@ class AuthServices {
     }
 
     const token = jwt.sign(
-      { userId: user.id, email: user.email },
+      { id: user.id, email: user.email },
       config.jwtSecret,
       { expiresIn: '1h' },
     );
-
     res.send(token);
   }
 
   static async changePassword(req: Request, res: Response) {
-    const id = res.locals.jwtPayload.userId;
+    const id = res.locals.jwtPayload.id;
 
     const { oldPassword, newPassword } = req.body;
     if (!(oldPassword && newPassword)) {

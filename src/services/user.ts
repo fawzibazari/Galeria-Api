@@ -2,15 +2,17 @@ import { Request, Response } from 'express';
 import { getRepository } from 'typeorm';
 import { User } from './../models/user';
 import { validate } from 'class-validator';
+import user from '../routes/user';
 
 class UserServices {
-  static async listAll(req: Request, res: Response) {
+  static listAll = async (req: Request, res: Response) => {
+    const id = res.locals.jwtPayload.id;
+
+    //Get users from database
     const userRepository = getRepository(User);
-    const users = await userRepository.find({
-      select: ['id', 'email'],
-    });
+    const users = await userRepository.findOneOrFail(id);
     res.send(users);
-  }
+  };
 
   static async getOneById(req: Request, res: Response) {
     const id: string = req.params.id;
@@ -22,6 +24,7 @@ class UserServices {
     } catch (error) {
       res.status(404).send('User not found');
     }
+    res.send(user);
   }
 
   static async newUser(req: Request, res: Response) {
