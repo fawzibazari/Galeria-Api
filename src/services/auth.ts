@@ -55,7 +55,6 @@ class AuthServices {
     }
 
     user.password = newPassword;
-    const errors = await validate(user);
 
     user.hashPassword();
     userRepository.save(user);

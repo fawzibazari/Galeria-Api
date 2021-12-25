@@ -1,5 +1,4 @@
 import { Router } from 'express';
-// import { checkJwt } from '../middlewares/checkJwt';
 import AuthServices from '../services/auth';
 
 const router = Router();
