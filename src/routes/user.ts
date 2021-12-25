@@ -1,14 +1,18 @@
 import { Router } from 'express';
-import { checkJwt } from '../middlewares/checkJwt';
 import UserServices from '../services/user';
+import passport from 'passport';
 
 const user = Router();
 
-user.get('/', checkJwt, UserServices.listAll);
+user.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  UserServices.listAll,
+);
 
 user.post('/', UserServices.newUser);
 
-user.patch('/:id([0-9]+)', [checkJwt], UserServices.editUser);
+user.patch('/:id([0-9]+)', UserServices.editUser);
 
-user.delete('/:id([0-9]+)', [checkJwt], UserServices.deleteUser);
+user.delete('/:id([0-9]+)', UserServices.deleteUser);
 export default user;

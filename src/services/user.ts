@@ -6,11 +6,9 @@ import user from '../routes/user';
 
 class UserServices {
   static listAll = async (req: Request, res: Response) => {
-    const id = res.locals.jwtPayload.id;
-
     //Get users from database
     const userRepository = getRepository(User);
-    const users = await userRepository.findOneOrFail(id);
+    const users = await userRepository.find();
     res.send(users);
   };
 

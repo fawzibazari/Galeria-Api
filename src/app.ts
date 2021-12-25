@@ -4,7 +4,8 @@ import { createConnection } from 'typeorm';
 import helmet from 'helmet';
 import cors from 'cors';
 import routes from './routes/routes';
-import { checkJwt } from './middlewares/checkJwt';
+import passport from 'passport';
+import passportMiddleware from './middlewares/checkJwt';
 
 //typeorm
 createConnection({
@@ -29,6 +30,8 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+passport.use(passportMiddleware);
 
 app.use('/', routes);
 
