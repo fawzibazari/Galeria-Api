@@ -1,5 +1,3 @@
-// import { Request, Response, NextFunction } from 'express';
-// import * as jwt from 'jsonwebtoken';
 import config from '../config/config';
 import { Strategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
 import { User } from '../models/user';

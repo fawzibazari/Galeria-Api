@@ -18,7 +18,7 @@ createConnection({
   entities: [__dirname + '/models/*.ts'],
   synchronize: true,
 })
-  .then((connection) => {
+  .then(() => {
     // here you can start to work with your entities
   })
   .catch((error) => console.log(error));
