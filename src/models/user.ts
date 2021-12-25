@@ -1,5 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import { Photo } from "./photo";
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  OneToMany,
+  PrimaryColumn,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+import { Photo } from './photo';
+import * as bcrypt from 'bcryptjs';
 
 @Entity()
 export class User {
@@ -10,9 +19,25 @@ export class User {
   @Column()
   lastname!: string;
   @Column()
+  email!: string;
+  @Column()
   password!: string;
   @Column()
   isValid?: boolean;
-  @OneToMany(() => Photo, photo => photo.user)
-  photos!: Photo[];
+  @Column()
+  @CreateDateColumn()
+  createdAt!: Date;
+  @Column()
+  @UpdateDateColumn()
+  updatedAt!: Date;
+  @OneToMany(() => Photo, (photo) => photo.user)
+  photos?: Photo[];
+
+  hashPassword() {
+    this.password = bcrypt.hashSync(this.password, 10);
+  }
+
+  checkIfUnencryptedPasswordIsValid(unencryptedPassword: string) {
+    return bcrypt.compareSync(unencryptedPassword, this.password);
+  }
 }

@@ -1,16 +1,21 @@
-import express, { Application, Request, Response, urlencoded } from "express";
-import "reflect-metadata";
-import { createConnection } from "typeorm";
+import express, { Application, Request, Response } from 'express';
+import 'reflect-metadata';
+import { createConnection } from 'typeorm';
+import helmet from 'helmet';
+import cors from 'cors';
+import routes from './routes/routes';
+import passport from 'passport';
+import passportMiddleware from './middlewares/checkJwt';
 
 //typeorm
 createConnection({
-  type: "postgres",
-  host: "localhost",
+  type: 'postgres',
+  host: 'localhost',
   port: 5432,
-  username: "postgres",
-  password: "postgres",
-  database: "galeria",
-  entities: [__dirname + "/models/*.ts"],
+  username: 'postgres',
+  password: 'postgres',
+  database: 'galeria',
+  entities: [__dirname + '/models/*.ts'],
   synchronize: true,
 })
   .then((connection) => {
@@ -21,14 +26,21 @@ createConnection({
 //express
 const app: Application = express();
 
+app.use(cors());
+app.use(helmet());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
+passport.use(passportMiddleware);
 
-app.get("/", async (req: Request, res: Response): Promise<Response> => {
+app.use('/', routes);
+
+// je dois prendre se get vers le routes.ts plus tard
+app.get('/', async (req: Request, res: Response): Promise<Response> => {
   return res.status(200).send({
-    message: "Mugiwara",
+    message: 'Mugiwara',
   });
 });
 app.listen(4000, () => {
-  console.log("running");
+  console.log('running');
 });

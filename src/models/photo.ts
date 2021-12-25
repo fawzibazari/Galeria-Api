@@ -1,19 +1,17 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
-import {User} from "./user";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { User } from './user';
 
 @Entity()
 export class Photo {
+  @PrimaryGeneratedColumn()
+  id!: number;
 
-    @PrimaryGeneratedColumn()
-    id!: number;
+  @Column()
+  url!: string;
 
-    @Column()
-    url!: string;
-    
-    @Column()
-    description!: string;
+  @Column()
+  description!: string;
 
-    @ManyToOne(() => User, user => user.photos)
-    user!: User;
-
+  @ManyToOne(() => User, (user) => user.photos)
+  user!: User;
 }

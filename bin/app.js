@@ -15,15 +15,18 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 require("reflect-metadata");
 const typeorm_1 = require("typeorm");
+const helmet_1 = __importDefault(require("helmet"));
+const cors_1 = __importDefault(require("cors"));
+const routes_1 = __importDefault(require("./routes/routes"));
 //typeorm
 (0, typeorm_1.createConnection)({
-    type: "postgres",
-    host: "localhost",
+    type: 'postgres',
+    host: 'localhost',
     port: 5432,
-    username: "postgres",
-    password: "postgres",
-    database: "galeria",
-    entities: [__dirname + "/entity/*.js"],
+    username: 'postgres',
+    password: 'postgres',
+    database: 'galeria',
+    entities: [__dirname + '/models/*.ts'],
     synchronize: true,
 })
     .then((connection) => {
@@ -32,13 +35,17 @@ const typeorm_1 = require("typeorm");
     .catch((error) => console.log(error));
 //express
 const app = (0, express_1.default)();
+app.use((0, cors_1.default)());
+app.use((0, helmet_1.default)());
 app.use(express_1.default.json());
 app.use(express_1.default.urlencoded({ extended: true }));
-app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+app.use('/', routes_1.default);
+// je dois prendre se get vers le routes.ts plus tard
+app.get('/', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     return res.status(200).send({
-        message: "Mugiwara",
+        message: 'Mugiwara',
     });
 }));
 app.listen(4000, () => {
-    console.log("running");
+    console.log('running');
 });
