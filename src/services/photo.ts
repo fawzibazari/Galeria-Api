@@ -36,17 +36,18 @@ ProductRoutes.post(
     const fileName = req.file?.filename;
     if (!fileName) {
       res.status(404).send('Photo pas trouvé');
+    } else {
+      const { user, description, tags } = req.body;
+      console.log(description), console.log(tags), console.log(fileName);
+      const photo = new Photo();
+      photo.url = fileName;
+      photo.description = description;
+      photo.tags = tags;
+      photo.user = user;
+      await photoRepository.save(photo);
+      res.send(`your image is uploaded 😁 ${fileName}
+      id: ${photo.id}`);
     }
-    const { user, description, tags } = req.body;
-    console.log(description), console.log(tags), console.log(fileName);
-    const photo = new Photo();
-    photo.url = fileName;
-    photo.description = description;
-    photo.tags = tags;
-    photo.user = user;
-    await photoRepository.save(photo);
-    res.send(`your image is uploaded 😁 ${fileName}
-    id: ${photo.id}`);
   },
 );
 
