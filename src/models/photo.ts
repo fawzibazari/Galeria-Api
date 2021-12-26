@@ -1,4 +1,10 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  CreateDateColumn,
+} from 'typeorm';
 import { User } from './user';
 
 @Entity()
@@ -7,10 +13,17 @@ export class Photo {
   id!: number;
 
   @Column()
-  url!: string;
+  url?: string;
 
   @Column()
   description!: string;
+
+  @Column()
+  tags!: string;
+
+  @Column()
+  @CreateDateColumn()
+  createdAt!: Date;
 
   @ManyToOne(() => User, (user) => user.photos)
   user!: User;
