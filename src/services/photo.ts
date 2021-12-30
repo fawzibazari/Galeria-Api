@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import multer from 'multer';
 import { Router } from 'express';
 import { getRepository } from 'typeorm';
+import { User } from '../models/user';
+import passport from 'passport';
 const ProductRoutes = Router();
 
 const storage = multer.diskStorage({
@@ -63,6 +65,39 @@ ProductRoutes.delete('/:id([0-9]+)', async (req: Request, res: Response) => {
   }
   photoRepository.delete(id);
   res.status(200).send('photo deleted');
+});
+
+ProductRoutes.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+
+  async (req: Request, res: Response) => {
+    // const id: string = req.params.id;
+    const photoRepository = getRepository(Photo);
+    const photos = await photoRepository.find({
+      relations: ['user'],
+    });
+    res.send(photos);
+  },
+);
+
+ProductRoutes.get('/:id([0-9]+)', async (req: Request, res: Response) => {
+  const id: string = req.params.id;
+  const photoRepository = getRepository(Photo);
+  const userRepository = getRepository(User);
+
+  try {
+    const user = await userRepository.findOneOrFail(id);
+    const photos = await photoRepository.find({
+      where: [
+        { id: 'Timber', lastName: 'Saw' },
+        { firstName: 'Stan', lastName: 'Lee' },
+      ],
+    });
+    res.send(photos);
+  } catch (error) {
+    res.status(404).send('User not found');
+  }
 });
 
 export default ProductRoutes;
