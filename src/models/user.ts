@@ -30,7 +30,7 @@ export class User {
   @UpdateDateColumn()
   updatedAt!: Date;
   @OneToMany(() => Photo, (photo) => photo.user)
-  photos?: Photo[];
+  photos!: Photo[];
 
   hashPassword() {
     this.password = bcrypt.hashSync(this.password, 10);

@@ -31,7 +31,8 @@ class AuthServices {
       config.jwtSecret,
       { expiresIn: '1h' },
     );
-    res.send(token);
+
+    res.send({ token, user });
   }
 
   static async changePassword(req: Request, res: Response) {
@@ -55,6 +56,11 @@ class AuthServices {
     }
 
     user.password = newPassword;
+    const errors = await validate(user);
+    if (errors.length > 0) {
+      res.status(400).send(errors);
+      return;
+    }
 
     user.hashPassword();
     userRepository.save(user);
