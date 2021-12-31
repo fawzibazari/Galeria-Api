@@ -2,6 +2,9 @@
   "compilerOptions": {
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "types": ["node"],
+    "noImplicitAny": true,
+    "noImplicitThis": false,
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Projects */

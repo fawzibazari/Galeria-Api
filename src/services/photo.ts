@@ -6,7 +6,6 @@ import { getRepository } from 'typeorm';
 import { User } from '../models/user';
 import passport from 'passport';
 const ProductRoutes = Router();
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, './images');
@@ -42,7 +41,8 @@ ProductRoutes.post(
       const { user, description, tags } = req.body;
       console.log(description), console.log(tags), console.log(fileName);
       const photo = new Photo();
-      photo.url = fileName;
+      photo.url = 'http://localhost:4000/photo/' + fileName;
+      console.log(photo.url);
       photo.description = description;
       photo.tags = tags;
       photo.user = user;
@@ -81,19 +81,11 @@ ProductRoutes.get(
   },
 );
 
-ProductRoutes.get('/:id([0-9]+)', async (req: Request, res: Response) => {
-  const id: string = req.params.id;
+ProductRoutes.get('/:url', async (req: Request, res: Response) => {
+  const url: string = req.params.image;
   const photoRepository = getRepository(Photo);
-  const userRepository = getRepository(User);
-
   try {
-    const user = await userRepository.findOneOrFail(id);
-    const photos = await photoRepository.find({
-      where: [
-        { id: 'Timber', lastName: 'Saw' },
-        { firstName: 'Stan', lastName: 'Lee' },
-      ],
-    });
+    const photos = await photoRepository.findOneOrFail(url);
     res.send(photos);
   } catch (error) {
     res.status(404).send('User not found');
