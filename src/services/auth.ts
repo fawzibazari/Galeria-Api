@@ -36,7 +36,7 @@ class AuthServices {
   }
 
   static async changePassword(req: Request, res: Response) {
-    const id = res.locals.jwtPayload.id;
+    const id: string = req.params.id;
 
     const { oldPassword, newPassword } = req.body;
     if (!(oldPassword && newPassword)) {

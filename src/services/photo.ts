@@ -5,14 +5,19 @@ import { Router } from 'express';
 import { getRepository } from 'typeorm';
 import { User } from '../models/user';
 import passport from 'passport';
+import * as fs from 'fs';
+import path from 'path';
+const baseUrl = 'http://localhost:4000/photo/';
+
 const ProductRoutes = Router();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, './images');
+    cb(null, __dirname + '../../../images');
   },
   filename: function (req: any, file: any, cb: any) {
-    const random = Math.random();
-    cb(null, random + file.originalname);
+    // const random = Math.random();
+    // cb(null, random + file.originalname);
+    cb(null, Date.now() + path.extname(file.originalname));
   },
 });
 const fileFilter = (req: any, file: any, cb: any) => {
@@ -35,19 +40,19 @@ ProductRoutes.post(
   async (req: Request, res: Response) => {
     const photoRepository = getRepository(Photo);
     const fileName = req.file?.filename;
+    console.log(fileName);
     if (!fileName) {
       res.status(404).send('Photo pas trouvé');
     } else {
       const { user, description, tags } = req.body;
       console.log(description), console.log(tags), console.log(fileName);
       const photo = new Photo();
-      photo.url = 'http://localhost:4000/photo/' + fileName;
-      console.log(photo.url);
+      photo.url = fileName;
       photo.description = description;
       photo.tags = tags;
       photo.user = user;
       await photoRepository.save(photo);
-      res.send(`your image is uploaded 😁 ${fileName}
+      res.send(`your image is uploaded 😁 ${photo.url}
       id: ${photo.id}`);
     }
   },
@@ -69,27 +74,36 @@ ProductRoutes.delete('/:id([0-9]+)', async (req: Request, res: Response) => {
 
 ProductRoutes.get(
   '/',
-  passport.authenticate('jwt', { session: false }),
+  // passport.authenticate('jwt', { session: false }),
 
   async (req: Request, res: Response) => {
     // const id: string = req.params.id;
     const photoRepository = getRepository(Photo);
-    const photos = await photoRepository.find({
-      relations: ['user'],
-    });
+    const photos = await photoRepository.find();
     res.send(photos);
   },
 );
 
-ProductRoutes.get('/:url', async (req: Request, res: Response) => {
-  const url: string = req.params.image;
-  const photoRepository = getRepository(Photo);
-  try {
-    const photos = await photoRepository.findOneOrFail(url);
-    res.send(photos);
-  } catch (error) {
-    res.status(404).send('User not found');
-  }
-});
+// ProductRoutes.get('/', async (req: Request, res: Response) => {
+//   const directoryPath = __dirname + '../../../images';
+
+//   fs.readdir(directoryPath, function (err, filesh) {
+//     if (err) {
+//       res.status(500).send({
+//         message: 'Unable to scan files!',
+//       });
+//     }
+
+//     const fileInfos: any = [];
+
+//     filesh.forEach((file) => {
+//       fileInfos.push({
+//         url: baseUrl + file,
+//       });
+//     });
+
+//     res.status(200).send(fileInfos);
+//   });
+// });
 
 export default ProductRoutes;
