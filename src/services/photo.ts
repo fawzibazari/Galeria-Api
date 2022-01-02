@@ -77,7 +77,7 @@ ProductRoutes.get(
   // passport.authenticate('jwt', { session: false }),
 
   async (req: Request, res: Response) => {
-    // const id: string = req.params.id;
+    const id: string = req.params.id;
     const photoRepository = getRepository(Photo);
     const photos = await photoRepository.find();
     res.send(photos);
