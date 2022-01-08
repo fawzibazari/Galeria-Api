@@ -5,9 +5,9 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
-import { Photo } from './photo';
-import * as bcrypt from 'bcryptjs';
+} from "typeorm";
+import { Photo } from "./photo";
+import * as bcrypt from "bcryptjs";
 
 @Entity()
 export class User {
