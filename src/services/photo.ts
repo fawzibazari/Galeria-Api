@@ -5,9 +5,8 @@ import { Router } from 'express';
 import { getRepository } from 'typeorm';
 import { User } from '../models/user';
 import passport from 'passport';
-import * as fs from 'fs';
 import path from 'path';
-const baseUrl = 'http://localhost:4000/photo/';
+const baseUrl = 'http://localhost:4000/img/';
 
 const ProductRoutes = Router();
 const storage = multer.diskStorage({
@@ -47,7 +46,7 @@ ProductRoutes.post(
       const { user, description, tags } = req.body;
       console.log(description), console.log(tags), console.log(fileName);
       const photo = new Photo();
-      photo.url = fileName;
+      photo.url = baseUrl + fileName;
       photo.description = description;
       photo.tags = tags;
       photo.user = user;
@@ -64,9 +63,9 @@ ProductRoutes.delete('/:id([0-9]+)', async (req: Request, res: Response) => {
   let photo: Photo;
   try {
     photo = await photoRepository.findOneOrFail(id);
+    return photo;
   } catch (error) {
     res.status(404).send('Photo pas trouvé');
-    return;
   }
   photoRepository.delete(id);
   res.status(200).send('photo deleted');
@@ -74,36 +73,13 @@ ProductRoutes.delete('/:id([0-9]+)', async (req: Request, res: Response) => {
 
 ProductRoutes.get(
   '/',
-  // passport.authenticate('jwt', { session: false }),
+  passport.authenticate('jwt', { session: false }),
 
   async (req: Request, res: Response) => {
-    const id: string = req.params.id;
     const photoRepository = getRepository(Photo);
     const photos = await photoRepository.find();
     res.send(photos);
   },
 );
-
-// ProductRoutes.get('/', async (req: Request, res: Response) => {
-//   const directoryPath = __dirname + '../../../images';
-
-//   fs.readdir(directoryPath, function (err, filesh) {
-//     if (err) {
-//       res.status(500).send({
-//         message: 'Unable to scan files!',
-//       });
-//     }
-
-//     const fileInfos: any = [];
-
-//     filesh.forEach((file) => {
-//       fileInfos.push({
-//         url: baseUrl + file,
-//       });
-//     });
-
-//     res.status(200).send(fileInfos);
-//   });
-// });
 
 export default ProductRoutes;

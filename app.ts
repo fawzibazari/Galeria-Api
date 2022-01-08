@@ -27,7 +27,6 @@ createConnection({
 //express
 const app: Application = express();
 
-// app.use('/images', express.static('images'));
 app.use('/img', express.static('images'));
 
 app.use(cors());
