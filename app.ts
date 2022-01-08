@@ -3,9 +3,10 @@ import 'reflect-metadata';
 import { createConnection } from 'typeorm';
 import helmet from 'helmet';
 import cors from 'cors';
-import routes from './routes/routes';
+import routes from './src/routes/routes';
 import passport from 'passport';
-import passportMiddleware from './middlewares/checkJwt';
+import passportMiddleware from './src/middlewares/checkJwt';
+import path from 'path';
 
 //typeorm
 createConnection({
@@ -15,7 +16,7 @@ createConnection({
   username: 'postgres',
   password: 'postgres',
   database: 'galeria',
-  entities: [__dirname + '/models/*.ts'],
+  entities: [__dirname + '/src/models/*.ts'],
   synchronize: true,
 })
   .then(() => {
@@ -25,6 +26,8 @@ createConnection({
 
 //express
 const app: Application = express();
+
+app.use('/img', express.static('images'));
 
 app.use(cors());
 app.use(helmet());
