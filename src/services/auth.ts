@@ -18,8 +18,7 @@ class AuthServices {
     try {
       user = await userRepository.findOneOrFail({ where: { email } });
     } catch (error) {
-      return 'pas bon';
-      // res.status(401).send();
+      res.status(401).send();
     }
 
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {
