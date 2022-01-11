@@ -8,14 +8,12 @@ import passport from 'passport';
 import path from 'path';
 const baseUrl = 'http://localhost:4000/img/';
 
-const ProductRoutes = Router();
+const photo = Router();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, __dirname + '../../../images');
   },
   filename: function (req: any, file: any, cb: any) {
-    // const random = Math.random();
-    // cb(null, random + file.originalname);
     cb(null, Date.now() + path.extname(file.originalname));
   },
 });
@@ -33,31 +31,29 @@ const fileFilter = (req: any, file: any, cb: any) => {
 
 const upload = multer({ storage: storage, fileFilter: fileFilter });
 
-ProductRoutes.post(
-  '/',
-  upload.single('image'),
-  async (req: Request, res: Response) => {
-    const photoRepository = getRepository(Photo);
-    const fileName = req.file?.filename;
-    console.log(fileName);
-    if (!fileName) {
-      res.status(404).send('Photo pas trouvé');
-    } else {
-      const { user, description, tags } = req.body;
-      console.log(description), console.log(tags), console.log(fileName);
-      const photo = new Photo();
-      photo.url = baseUrl + fileName;
-      photo.description = description;
-      photo.tags = tags;
-      photo.user = user;
-      await photoRepository.save(photo);
-      res.send(`your image is uploaded 😁 ${photo.url}
+photo.post('/', upload.single('image'), async (req: Request, res: Response) => {
+  passport.authenticate('jwt', { session: false });
+  const photoRepository = getRepository(Photo);
+  const fileName = req.file?.filename;
+  console.log(fileName);
+  if (!fileName) {
+    res.status(404).send('Photo pas trouvé');
+  } else {
+    const { user, description, tags } = req.body;
+    console.log(description), console.log(tags), console.log(fileName);
+    const photo = new Photo();
+    photo.url = baseUrl + fileName;
+    photo.description = description;
+    photo.tags = tags;
+    photo.user = user;
+    await photoRepository.save(photo);
+    res.send(`your image is uploaded 😁 ${photo.url}
       id: ${photo.id}`);
-    }
-  },
-);
+  }
+});
 
-ProductRoutes.delete('/:id([0-9]+)', async (req: Request, res: Response) => {
+photo.delete('/:id([0-9]+)', async (req: Request, res: Response) => {
+  passport.authenticate('jwt', { session: false });
   const id = req.params.id;
   const photoRepository = getRepository(Photo);
   let photo: Photo;
@@ -71,25 +67,40 @@ ProductRoutes.delete('/:id([0-9]+)', async (req: Request, res: Response) => {
   res.status(200).send('photo deleted');
 });
 
-ProductRoutes.get(
-  "/:id([0-9]+)",
-  passport.authenticate("jwt", { session: false }),
+photo.get(
+  '/',
+  passport.authenticate('jwt', { session: false }),
   async (req: Request, res: Response) => {
-    const id = req.params.id;
     const photoRepository = getRepository(Photo);
-    const userRepository = getRepository(User);
 
-    const photos = await photoRepository.find(
-      {
-        where: {
-          user: { id: id},
-      },
-        relations: ["user"],
-
-    }
-    );
+    const photos = await photoRepository.find({ relations: ['user'] });
     res.send(photos);
-  }
+  },
+);
+photo.get(
+  '/:id([0-9]+)',
+  passport.authenticate('jwt', { session: false }),
+  async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const photoRepository = getRepository(Photo);
+      const userRepository = getRepository(User);
+
+      const photos = await photoRepository.find({
+        where: {
+          user: { id: id },
+        },
+        relations: ['user'],
+      });
+      if (photos.length == 0) {
+        res.status(404).send('Photo pas trouvé');
+      } else {
+        res.send(photos);
+      }
+    } catch (error) {
+      res.status(404).send('Ya une ');
+    }
+  },
 );
 
-export default ProductRoutes;
+export default photo;
