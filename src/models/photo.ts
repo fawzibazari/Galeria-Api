@@ -4,8 +4,8 @@ import {
   Column,
   ManyToOne,
   CreateDateColumn,
-} from "typeorm";
-import { User } from "./user";
+} from 'typeorm';
+import { User } from './user';
 
 @Entity()
 export class Photo {

@@ -98,7 +98,7 @@ photo.get(
         res.send(photos);
       }
     } catch (error) {
-      res.status(404).send('Ya une ');
+      res.status(404).send('Ya une erreur servenu');
     }
   },
 );
