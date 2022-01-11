@@ -1,8 +1,8 @@
-import { Request, Response } from 'express';
-import { getRepository } from 'typeorm';
-import { User } from './../models/user';
-import { validate } from 'class-validator';
-import user from '../routes/user';
+import { Request, Response } from "express";
+import { getRepository } from "typeorm";
+import { User } from "./../models/user";
+import { validate } from "class-validator";
+import user from "../routes/user";
 
 class UserServices {
   static listAll = async (req: Request, res: Response) => {
@@ -20,7 +20,7 @@ class UserServices {
       const user = await userRepository.findOneOrFail(id);
       res.send(user);
     } catch (error) {
-      res.status(404).send('User not found');
+      res.status(404).send("User not found");
     }
     res.send(user);
   }
@@ -47,11 +47,11 @@ class UserServices {
     try {
       await userRepository.save(user);
     } catch (e) {
-      res.status(409).send('email deja utiliser');
+      res.status(409).send("email deja utiliser");
       return;
     }
 
-    res.status(201).send('user crée avec succes 👏');
+    res.status(201).send("user crée avec succes 👏");
   }
 
   static async editUser(req: Request, res: Response) {
@@ -65,7 +65,7 @@ class UserServices {
       user = await userRepository.findOneOrFail(id);
     } catch (error) {
       //If not found, send a 404 response
-      res.status(404).send('on a pas trouvé le User que vous chercher');
+      res.status(404).send("on a pas trouvé le User que vous chercher");
       return;
     }
 
@@ -80,7 +80,7 @@ class UserServices {
     try {
       await userRepository.save(user);
     } catch (e) {
-      res.status(409).send('user deja utilisé');
+      res.status(409).send("user deja utilisé");
       return;
     }
     res.status(204).send();
@@ -94,7 +94,7 @@ class UserServices {
     try {
       user = await userRepository.findOneOrFail(id);
     } catch (error) {
-      res.status(404).send('User pas trouvé');
+      res.status(404).send("User pas trouvé");
       return;
     }
     userRepository.delete(id);

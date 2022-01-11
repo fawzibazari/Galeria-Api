@@ -72,21 +72,24 @@ ProductRoutes.delete('/:id([0-9]+)', async (req: Request, res: Response) => {
 });
 
 ProductRoutes.get(
-  '/:id([0-9]+)',
-  passport.authenticate('jwt', { session: false }),
+  "/:id([0-9]+)",
+  passport.authenticate("jwt", { session: false }),
   async (req: Request, res: Response) => {
     const id = req.params.id;
     const photoRepository = getRepository(Photo);
     const userRepository = getRepository(User);
 
-    const photos = await photoRepository.find({
-      where: {
-        user: { id: id },
+    const photos = await photoRepository.find(
+      {
+        where: {
+          user: { id: id},
       },
-      relations: ['user'],
-    });
+        relations: ["user"],
+
+    }
+    );
     res.send(photos);
-  },
+  }
 );
 
 export default ProductRoutes;
