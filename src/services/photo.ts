@@ -84,7 +84,7 @@ photo.get(
     try {
       const id = req.params.id;
       const photoRepository = getRepository(Photo);
-      const userRepository = getRepository(User);
+      // const userRepository = getRepository(User);
 
       const photos = await photoRepository.find({
         where: {

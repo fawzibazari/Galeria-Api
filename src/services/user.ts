@@ -14,8 +14,6 @@ class UserServices {
 
   static async getOneById(req: Request, res: Response) {
     const id = req.params.id;
-    console.log(id);
-
     const userRepository = getRepository(User);
     try {
       const user = await userRepository.findOneOrFail(id);
@@ -64,6 +62,7 @@ class UserServices {
     let user;
     try {
       user = await userRepository.findOneOrFail(id);
+      res.status(201).send('user bien update !');
     } catch (error) {
       //If not found, send a 404 response
       res.status(404).send('on a pas trouvé le User que vous chercher');
@@ -99,7 +98,7 @@ class UserServices {
       return;
     }
     userRepository.delete(id);
-    res.status(204).send();
+    res.status(204).send(user);
   }
 }
 export default UserServices;

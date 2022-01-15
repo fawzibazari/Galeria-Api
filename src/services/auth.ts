@@ -1,9 +1,9 @@
-import { Request, Response } from "express";
-import * as jwt from "jsonwebtoken";
-import { getRepository } from "typeorm";
-import { validate } from "class-validator";
-import { User } from "../models/user";
-import config from "../config/config";
+import { Request, Response } from 'express';
+import * as jwt from 'jsonwebtoken';
+import { getRepository } from 'typeorm';
+import { validate } from 'class-validator';
+import { User } from '../models/user';
+import config from '../config/config';
 
 class AuthServices {
   static async login(req: Request, res: Response) {
@@ -22,14 +22,14 @@ class AuthServices {
     }
 
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {
-      res.status(401).send();
-      return "pas la bonne information";
+      res.status(401).send('false credentials');
+      return;
     }
 
     const token = jwt.sign(
       { id: user.id, email: user.email },
       config.jwtSecret,
-      { expiresIn: "1h" }
+      { expiresIn: '1h' },
     );
 
     res.send({ token, user });

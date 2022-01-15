@@ -1,7 +1,7 @@
-import config from "../config/config";
-import { Strategy, ExtractJwt, StrategyOptions } from "passport-jwt";
-import { User } from "../models/user";
-import { getRepository } from "typeorm";
+import config from '../config/config';
+import { Strategy, ExtractJwt, StrategyOptions } from 'passport-jwt';
+import { User } from '../models/user';
+import { getRepository } from 'typeorm';
 
 const opts: StrategyOptions = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
