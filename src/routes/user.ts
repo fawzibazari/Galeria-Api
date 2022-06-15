@@ -10,6 +10,8 @@ user.get(
   UserServices.listAll,
 );
 
+user.get('/:id([0-9]+)', UserServices.getOneById);
+
 user.post('/', UserServices.newUser);
 
 user.patch('/:id([0-9]+)', UserServices.editUser);

@@ -18,13 +18,12 @@ class AuthServices {
     try {
       user = await userRepository.findOneOrFail({ where: { email } });
     } catch (error) {
-      return 'pas bon';
-      // res.status(401).send();
+      res.status(401).send();
     }
 
     if (!user.checkIfUnencryptedPasswordIsValid(password)) {
-      res.status(401).send();
-      return 'pas la bonne information';
+      res.status(401).send('false credentials');
+      return;
     }
 
     const token = jwt.sign(
